@@ -37,9 +37,13 @@ ALLOWED_HOSTS = [
 if os.environ.get("RENDER_EXTERNAL_HOSTNAME"):
     ALLOWED_HOSTS.append(os.environ["RENDER_EXTERNAL_HOSTNAME"])
 
-CSRF_TRUSTED_ORIGINS = [
-"https://bladder-flatness-condone.ngrok-free.dev",
-]
+
+CSRF_TRUSTED_ORIGINS = []
+
+if os.environ.get("RENDER_EXTERNAL_HOSTNAME"):
+    CSRF_TRUSTED_ORIGINS.append(
+        f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}"
+    )
 
 # Application definition
 
@@ -140,6 +144,15 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 MEDIA_ROOT =  os.path.join(BASE_DIR,'static/images')
 MEDIA_URL = 'imagens/'
